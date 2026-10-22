@@ -1,3 +1,4 @@
+
 package test;
 
 import client.UserClient;
@@ -52,11 +53,27 @@ public class UserLoginTest {
     }
 
     @Test
-    @DisplayName("Вход с неверными данными")
-    @Description("Проверка ошибки авторизации пользователя с неверными email и паролем")
-    public void loginWithInvalidCredentialsReturnsError() {
+    @DisplayName("Вход с неверным email")
+    @Description("Проверка ошибки авторизации с неверным email и правильным паролем")
+    public void loginWithInvalidEmailReturnsError() {
         UserCredentials credentials = new UserCredentials(
                 "wrong_" + user.getEmail(),
+                user.getPassword()
+        );
+
+        userClient.login(credentials)
+                .then()
+                .statusCode(SC_UNAUTHORIZED)
+                .body("success", equalTo(false))
+                .body("message", equalTo("email or password are incorrect"));
+    }
+
+    @Test
+    @DisplayName("Вход с неверным паролем")
+    @Description("Проверка ошибки авторизации с правильным email и неверным паролем")
+    public void loginWithInvalidPasswordReturnsError() {
+        UserCredentials credentials = new UserCredentials(
+                user.getEmail(),
                 "wrongPassword"
         );
 

@@ -1,3 +1,4 @@
+
 package client;
 
 import io.qameta.allure.Step;
@@ -7,15 +8,12 @@ import user.UserCredentials;
 
 import static io.restassured.RestAssured.given;
 
-public class UserClient {
-
-    private static final String BASE_URL = "https://stellarburgers.education-services.ru";
+public class UserClient extends BaseClient {
 
     @Step("Создание пользователя")
     public Response create(User user) {
         return given()
-                .baseUri(BASE_URL)
-                .header("Content-type", "application/json")
+                .spec(REQUEST_SPEC)
                 .body(user)
                 .when()
                 .post("/api/auth/register");
@@ -24,8 +22,7 @@ public class UserClient {
     @Step("Авторизация пользователя")
     public Response login(UserCredentials credentials) {
         return given()
-                .baseUri(BASE_URL)
-                .header("Content-type", "application/json")
+                .spec(REQUEST_SPEC)
                 .body(credentials)
                 .when()
                 .post("/api/auth/login");
@@ -34,7 +31,7 @@ public class UserClient {
     @Step("Удаление пользователя")
     public Response delete(String accessToken) {
         return given()
-                .baseUri(BASE_URL)
+                .spec(REQUEST_SPEC)
                 .header("Authorization", accessToken)
                 .when()
                 .delete("/api/auth/user");

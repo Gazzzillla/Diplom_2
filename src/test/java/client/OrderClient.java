@@ -1,3 +1,4 @@
+
 package client;
 
 import io.qameta.allure.Step;
@@ -6,14 +7,12 @@ import order.Order;
 
 import static io.restassured.RestAssured.given;
 
-public class OrderClient {
-
-    private static final String BASE_URL = "https://stellarburgers.education-services.ru";
+public class OrderClient extends BaseClient {
 
     @Step("Получение ингредиентов")
     public Response getIngredients() {
         return given()
-                .baseUri(BASE_URL)
+                .spec(REQUEST_SPEC)
                 .when()
                 .get("/api/ingredients");
     }
@@ -21,8 +20,7 @@ public class OrderClient {
     @Step("Создание заказа с авторизацией")
     public Response create(Order order, String accessToken) {
         return given()
-                .baseUri(BASE_URL)
-                .header("Content-type", "application/json")
+                .spec(REQUEST_SPEC)
                 .header("Authorization", accessToken)
                 .body(order)
                 .when()
@@ -32,8 +30,7 @@ public class OrderClient {
     @Step("Создание заказа без авторизации")
     public Response createWithoutAuthorization(Order order) {
         return given()
-                .baseUri(BASE_URL)
-                .header("Content-type", "application/json")
+                .spec(REQUEST_SPEC)
                 .body(order)
                 .when()
                 .post("/api/orders");
